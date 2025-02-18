@@ -16,17 +16,16 @@ func _on_body_entered(body):
     explode()
 
 func explode():
-    # Нанести урон
     var space = get_world_3d().direct_space_state
     var query = PhysicsShapeQueryParameters.new()
     query.shape = SphereShape3D.new()
     query.shape.radius = blast_radius
-    query.collision_mask = 1  # Слой, на котором находятся цели
+    query.collision_mask = 4  # Слой с воксельными моделями
     
     for result in space.intersect_shape(query):
         var obj = result.collider
-        if obj.has_method("take_damage"):
-            obj.take_damage(damage)
+        if obj.has_method("explode"):
+            obj.explode(global_position, blast_radius)
     
     # Создать эффект
     if explosion_effect:
